@@ -1,0 +1,285 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>三更之约</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;color:#ccc;font-family:SimSun,Microsoft YaHei,serif;height:100vh;overflow:hidden;user-select:none;display:flex;justify-content:center}
+#G{width:100%;max-width:1100px;height:100vh;display:none;flex-direction:column;background:#121212}
+#SC{position:relative;flex:1;min-height:55vh;background:radial-gradient(ellipse at 50% 85%,#1e1e1e,#0f0f0f 60%,#0a0a0a);border-bottom:1px solid #2a2a2a;overflow:hidden}
+.rt{position:absolute;top:12px;left:20px;z-index:40;font-size:.85rem;color:rgba(255,255,255,.25);letter-spacing:.3em;pointer-events:none}
+.it{position:absolute;z-index:5;cursor:pointer;transition:filter .25s,transform .25s}
+.it:hover{filter:brightness(1.4);transform:scale(1.06);z-index:10;box-shadow:0 0 28px rgba(200,30,30,.5)}
+.il{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);background:rgba(10,10,10,.92);color:#c88;font-size:.78rem;font-weight:bold;padding:4px 12px;border-radius:3px;white-space:nowrap;border:1px solid #555;pointer-events:none}
+.it:hover .il{color:#f44;border-color:rgba(255,60,60,.7);background:rgba(20,5,5,.95)}
+.ex{position:absolute;z-index:8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:rgba(255,255,255,.2);border:1px dashed #555;border-radius:4px;background:rgba(255,255,255,.03);transition:all .3s}
+.ex:hover{color:#f66;border-color:rgba(200,50,50,.7);background:rgba(180,0,0,.12)}
+#HB{display:flex;align-items:center;gap:10px;padding:12px 22px;background:#151515;border-bottom:1px solid #2a2a2a;min-height:48px;flex-shrink:0}
+#HI{font-size:1.2rem}#HT{font-size:.95rem;color:#e8c070;flex:1;font-weight:bold}
+#HD{font-size:.6rem;color:#777;background:#111;padding:4px 12px;border:1px solid #333;border-radius:3px}
+#NR{flex:0 0 100px;overflow-y:auto;padding:10px 22px;background:#0f0f0f;border-bottom:1px solid #222;font-size:.9rem;line-height:1.7}
+.nl{margin-bottom:3px;animation:fu .3s ease-out}.nl.r{color:#f44}.nl.d{color:#777;font-style:italic}.nl.g{color:#e8c070}
+@keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+#IV{display:flex;align-items:center;gap:8px;padding:6px 22px;background:#121212;min-height:38px;flex-shrink:0}
+#IT{font-size:.6rem;color:#666;letter-spacing:.2em;margin-right:8px}
+.ic{width:38px;height:30px;background:#151515;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#666;cursor:pointer;transition:all .3s;border-radius:2px}
+.ic.o{border-color:#5a2828;color:#b99;background:#1a0e0e}.ic:hover{border-color:rgba(200,50,50,.6)}
+#MD{position:fixed;top:0;left:0;width:100%;height:100%;z-index:350;background:rgba(0,0,0,.95);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;animation:mdIn .3s ease-out}
+#MD.on{display:flex}#MD img{max-width:84%;max-height:36vh;margin-bottom:14px;border:1px solid rgba(200,50,50,.3)}
+@keyframes mdIn{from{opacity:0}to{opacity:1}}
+.mt{color:#c22;font-size:1.3rem;letter-spacing:.2em;margin-bottom:10px}
+.mb{font-size:.92rem;line-height:1.9;color:#bbb;max-width:520px}.mb .hl{color:#f44}
+.mbtn{margin:6px 5px;padding:10px 28px;font-family:inherit;font-size:.88rem;color:#aaa;background:transparent;border:1px solid #444;cursor:pointer;letter-spacing:.1em;transition:all .3s}
+.mbtn:hover{border-color:#c22;color:#fff;background:rgba(180,0,0,.15)}
+.fx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:90}
+.shk{animation:sx .6s ease-out}@keyframes sx{0%,100%{transform:translateX(0)}10%{transform:translateX(-8px)}30%{transform:translateX(8px)}50%{transform:translateX(-4px)}70%{transform:translateX(4px)}90%{transform:translateX(-2px)}}
+.flh{animation:fo .5s ease-out;background:rgba(150,0,0,.12)}@keyframes fo{from{opacity:1}to{opacity:0}}
+.tp{position:absolute;top:10px;right:22px;z-index:20;font-size:.7rem;color:rgba(255,255,255,.12);pointer-events:none;animation:fu .4s ease-out}
+.f1{background:linear-gradient(180deg,#3a3a3a,#252525 45%,#1e1e1e);border-radius:8px 8px 0 0;border:2px solid #444;box-shadow:0 -3px 8px rgba(0,0,0,.4) inset}
+.f1::after{content:'';position:absolute;top:10px;left:10%;width:25%;height:28%;background:linear-gradient(180deg,#484848,#333);border-radius:6px;border:1px solid #4a4a4a}
+.f2{background:linear-gradient(180deg,#3a3028,#282018);border-radius:4px;border:2px solid #3a3028;box-shadow:0 3px 6px rgba(0,0,0,.5)}
+.f3{background:linear-gradient(180deg,#282828,#181818);border:2px solid #444;border-radius:3px;box-shadow:0 0 14px rgba(200,40,40,.3),0 0 4px rgba(200,30,30,.2) inset}
+.f3::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:22%;height:10px;background:#2a2a2a;border-radius:0 0 3px 3px}
+.f4{background:linear-gradient(90deg,#333,#282828 2%,#242424 50%,#282828 98%,#333);border:2px solid #444;border-radius:3px 3px 0 0;box-shadow:0 0 0 1px rgba(0,0,0,.3) inset}
+.f4::after{content:'';position:absolute;top:0;left:50%;width:2px;height:100%;background:#4a4a4a}
+.f5{background:linear-gradient(160deg,#383848,#1e1e2e 40%,#2a2a38);border:3px solid #444;border-radius:2px;box-shadow:0 0 24px rgba(30,30,60,.4) inset}
+.f5::after{content:'';position:absolute;top:12%;left:18%;width:28%;height:35%;background:linear-gradient(160deg,rgba(220,220,250,.08),transparent);border-radius:2px}
+.f6{background:linear-gradient(180deg,#3a2e24,#261e14);border:2px solid #3e342a;border-radius:5px 5px 0 0;box-shadow:0 0 0 2px rgba(0,0,0,.3) inset}
+.f6::after{content:'';position:absolute;top:42%;right:10%;width:6px;height:6px;background:#555;border:1px solid #666;border-radius:50%}
+.f7{background:linear-gradient(180deg,#181822,#0e0e16);border:2px solid #3a3a44;box-shadow:0 0 12px rgba(20,20,50,.5) inset}
+.f8{background:#2e2820;border:2px solid #3e3428;border-radius:2px;box-shadow:0 3px 0 #342e24}
+.f9{background:#333;border:2px solid #4a4a4a;transform:rotate(-3deg);box-shadow:0 0 6px rgba(0,0,0,.4)}
+.fa{border-left:3px solid #444;border-right:2px solid #333;background:linear-gradient(90deg,rgba(30,30,30,.88),rgba(18,18,18,.92))}
+.fb{background:#333;border:2px solid #444;border-radius:4px 4px 50% 50%}
+.fc{background:#2e2620;border:2px solid #3e3428;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.3) inset}
+.fd{background:linear-gradient(180deg,#333,#242424);border:2px solid #444;border-radius:5px 5px 0 0}
+.fe{background:#222;border:2px solid #444;border-radius:3px}
+.ff{background:radial-gradient(ellipse at center,#181818,#0a0a0a)}
+.fg{background:linear-gradient(180deg,#282828,#181818);border:2px solid #444;border-radius:3px;box-shadow:0 0 6px rgba(120,120,140,.15) inset}
+.fh{background:linear-gradient(180deg,#383838,#282828);border-radius:8px;border:2px solid #444}
+.fi{background:linear-gradient(180deg,#383838,#242424);border:2px solid #444;border-radius:4px 4px 0 0}
+.fj{background:#2e2820;border:2px solid #3e3428;border-radius:3px;box-shadow:0 3px 4px rgba(0,0,0,.4)}
+.fk{background:#242424;border:2px solid #444;border-radius:6px}
+.fl{background:#2a2418;border:2px solid #3e3420;border-radius:3px}
+@media(max-width:600px){#NR{flex:0 0 75px;font-size:.78rem}#HT{font-size:.78rem}.il{font-size:.6rem}}
+@keyframes spPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+</style></head><body>
+
+<div id="TS" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;background:radial-gradient(ellipse at center,#0a0000,#000 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden">
+<div id="TSP" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></div>
+<div style="position:relative;z-index:2">
+<div style="font-size:clamp(3rem,10vw,6rem);font-weight:900;letter-spacing:.5em;color:#8b0000;text-shadow:0 0 80px rgba(200,0,0,.7),0 0 160px rgba(139,0,0,.5);animation:tpulse 3s ease-in-out infinite;margin-bottom:12px">三更之约</div>
+<div style="font-size:.95rem;color:#555;letter-spacing:.8em;margin-bottom:50px">T H E &nbsp; 3 &nbsp; A M &nbsp; P A C T</div>
+<div style="font-size:.9rem;color:#777;margin-bottom:8px;animation:tsf 4s ease-in-out infinite">你没有受邀。</div>
+<div style="font-size:1.1rem;color:#b33;margin-bottom:50px;letter-spacing:.2em;animation:tsf 4s ease-in-out 1s infinite">你 被 选 中 了。</div>
+<button id="BT1" style="padding:16px 56px;font-family:inherit;font-size:1.05rem;color:#bbb;background:rgba(139,0,0,.06);border:1px solid #622;cursor:pointer;letter-spacing:.25em;border-radius:2px;margin:8px;transition:all .4s" onmouseover="this.style.borderColor='#c22';this.style.color='#fff';this.style.background='rgba(180,0,0,.15)';this.style.boxShadow='0 0 30px rgba(200,0,0,.3)'" onmouseout="this.style.borderColor='#622';this.style.color='#bbb';this.style.background='rgba(139,0,0,.06)';this.style.boxShadow='none'">开 始 游 戏</button>
+<button id="BT2" style="padding:12px 40px;font-family:inherit;font-size:.9rem;color:#444;background:transparent;border:1px solid #222;cursor:pointer;letter-spacing:.2em;border-radius:2px;margin:4px;transition:all .3s" onmouseover="this.style.borderColor='#a33';this.style.color='#888'" onmouseout="this.style.borderColor='#222';this.style.color='#444'">继 续 游 戏</button>
+<div style="margin-top:20px;display:flex;gap:12px;justify-content:center">
+<button id="BTE" style="padding:8px 18px;font-family:inherit;font-size:.75rem;color:#555;background:transparent;border:1px solid #1a1a1a;cursor:pointer;letter-spacing:.1em;border-radius:2px;transition:all .3s" onmouseover="this.style.borderColor='#a33';this.style.color='#888'" onmouseout="this.style.borderColor='#1a1a1a';this.style.color='#555'">达成结局</button>
+<button id="BTI" style="padding:8px 18px;font-family:inherit;font-size:.75rem;color:#555;background:transparent;border:1px solid #1a1a1a;cursor:pointer;letter-spacing:.1em;border-radius:2px;transition:all .3s" onmouseover="this.style.borderColor='#a33';this.style.color='#888'" onmouseout="this.style.borderColor='#1a1a1a';this.style.color='#555'">收集物品</button>
+</div></div></div>
+<style>@keyframes tpulse{0%,100%{text-shadow:0 0 80px rgba(200,0,0,.7),0 0 160px rgba(139,0,0,.5)}50%{text-shadow:0 0 120px rgba(240,0,0,.9),0 0 240px rgba(180,0,0,.7)}}@keyframes tsf{0%,100%{opacity:.4}50%{opacity:1}}@keyframes btGlow{0%,100%{box-shadow:0 0 10px rgba(200,150,30,.2)}50%{box-shadow:0 0 25px rgba(220,180,50,.5)}}.td{position:absolute;width:2px;height:60px;background:linear-gradient(180deg,transparent,rgba(139,0,0,.4),transparent);animation:tdF linear infinite}@keyframes tdF{0%{transform:translateY(-100px);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(110vh);opacity:0}}</style>
+
+<div id="G"><div id="SC"></div>
+<div id="HB"><span id="HI">💡</span><span id="HT">看看电脑</span><span id="HD">任务</span></div>
+<div id="NR"></div><div id="IV"><span id="IT">物 品</span></div></div>
+<div class="fx" id="FX"></div><div id="MD"></div>
+
+<script>
+// ====== 状态 ======
+var GS={room:'bedroom',phase:0,inv:[],fl:{},md:false,kd:false,cf:false,sf:false,sof:false,ph:false,ff:false,kf:false};
+function save(){try{localStorage.setItem('s3y',JSON.stringify(GS))}catch(e){}}
+function load(){try{var d=JSON.parse(localStorage.getItem('s3y'));if(d)Object.assign(GS,d)}catch(e){}}
+function rst(){try{auStop();localStorage.removeItem('s3y')}catch(e){}location.reload()}
+load();  if(GS.room==='outdoor'){GS.room='bedroom';GS.phase=0;GS.md=GS.kd=false;GS.fl={};GS.inv=[]}
+var IMG='img/',AI={forum:IMG+'forum.png',mirror:IMG+'mirror.png',door:IMG+'door.png'};
+
+// ====== 全局统计 ======
+function gsGet(){try{return JSON.parse(localStorage.getItem('s3y_stats'))||{ends:[],items:[]}}catch(e){return{ends:[],items:[]}}}
+function gsEnd(n){var s=gsGet();if(s.ends.indexOf(n)<0){s.ends.push(n);localStorage.setItem('s3y_stats',JSON.stringify(s))}}
+function gsItem(n){var s=gsGet();if(s.items.indexOf(n)<0){s.items.push(n);localStorage.setItem('s3y_stats',JSON.stringify(s))}}
+function gsSync(){if(GS.inv.length){var s=gsGet();GS.inv.forEach(function(i){if(s.items.indexOf(i.n)<0)s.items.push(i.n)});localStorage.setItem('s3y_stats',JSON.stringify(s))}}
+
+// ====== 音效 ======
+var AU={bgm:null,chm:null,ctx:null};
+function auInit(){if(AU.ctx)return;try{AU.ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){};AU.bgm=new Audio('sounds/bg_charm_and_rules.mp3');AU.bgm.loop=true;AU.bgm.volume=0.22;AU.chm=new Audio('sounds/chase_creepy_vibes.mp3');AU.chm.loop=true;AU.chm.volume=0}
+function auPlay(){auInit();if(AU.bgm)AU.bgm.play().catch(function(){})}
+function auStop(){if(AU.bgm){AU.bgm.pause();AU.bgm.currentTime=0}}
+function auChase(){auInit();AU.bgm.pause();AU.chm.currentTime=0;AU.chm.volume=0;AU.chm.play().catch(function(){});var t=0,iv=setInterval(function(){t+=0.04;if(t>=1){clearInterval(iv);AU.chm.volume=0.3;return}AU.chm.volume=0.3*t},40)}
+function auEndChase(){var t=0,iv=setInterval(function(){t+=0.04;if(t>=0.5){clearInterval(iv);AU.chm.pause();AU.chm.volume=0;AU.bgm.play().catch(function(){});AU.bgm.volume=0.22;return}AU.chm.volume=0.3*(1-t)},40)}
+function sfx(t){auInit();if(!AU.ctx)return;var c=AU.ctx,n=c.currentTime,o,g;if(t==='flash'){o=c.createOscillator();g=c.createGain();o.type='sine';o.frequency.setValueAtTime(500,n);o.frequency.setValueAtTime(700,n+.02);g.gain.setValueAtTime(.05,n);g.gain.exponentialRampToValueAtTime(.001,n+.06);o.connect(g);g.connect(c.destination);o.start(n);o.stop(n+.06)}if(t==='shake'){o=c.createOscillator();g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(60,n);o.frequency.exponentialRampToValueAtTime(20,n+.4);g.gain.setValueAtTime(.06,n);g.gain.exponentialRampToValueAtTime(.001,n+.5);o.connect(g);g.connect(c.destination);o.start(n);o.stop(n+.5)}if(t==='scare'){o=c.createOscillator();g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(800,n);o.frequency.exponentialRampToValueAtTime(80,n+.3);g.gain.setValueAtTime(.08,n);g.gain.exponentialRampToValueAtTime(.001,n+.4);o.connect(g);g.connect(c.destination);o.start(n);o.stop(n+.4)}if(t==='spawn'){o=c.createOscillator();g=c.createGain();o.type='sine';o.frequency.value=120;g.gain.value=.025;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.1);o.stop(c.currentTime+.1)}if(t==='end'){o=c.createOscillator();g=c.createGain();o.type='sine';o.frequency.setValueAtTime(300,n);o.frequency.setValueAtTime(500,n+.2);o.frequency.setValueAtTime(800,n+.4);g.gain.setValueAtTime(.08,n);g.gain.exponentialRampToValueAtTime(.01,n+.8);o.connect(g);g.connect(c.destination);o.start(n);o.stop(n+.8)}}
+
+// ====== UI工具 ======
+function N(t,c){var p=document.getElementById('NR'),l=document.createElement('div');l.className='nl'+(c?' '+c:'');l.innerHTML=t;p.appendChild(l);p.scrollTop=p.scrollHeight}
+function H(t){document.getElementById('HT').textContent=t}
+function TP(t){var s=document.getElementById('SC'),e=document.createElement('div');e.className='tp';e.textContent=t;s.appendChild(e);setTimeout(function(){e.style.opacity='0';e.style.transition='opacity 1s';setTimeout(function(){e.remove()},1000)},2500)}
+function FX(n){var f=document.getElementById('FX');if(n==='flash'){f.className='flh';setTimeout(function(){f.className=''},500)}if(n==='shake'){f.className='shk';setTimeout(function(){f.className=''},700)}sfx(n)}
+function addInv(n,d){if(GS.inv.find(function(i){return i.n===n}))return;GS.inv.push({n:n,d:d});gsItem(n);refInv();N('获得「'+n+'」。','g');save()}
+function refInv(){var r=document.getElementById('IV');r.innerHTML='<span id="IT">物 品</span>';GS.inv.forEach(function(it){var c=document.createElement('div');c.className='ic o';c.textContent=it.n.slice(0,2);c.title=it.d;c.onclick=function(){N('「'+it.n+'」：'+it.d,'d')};r.appendChild(c)});for(var i=GS.inv.length;i<6;i++){var c=document.createElement('div');c.className='ic';c.textContent='-';r.appendChild(c)}}
+var MD_CB=[];
+function mOpen(t,img,ls,cs){var m=document.getElementById('MD');m.classList.add('on');MD_CB=cs||[{t:'继续',a:function(){mClose()}}];var btns='';for(var i=0;i<MD_CB.length;i++)btns+='<button class="mbtn" onclick="MD_CB['+i+'].a()">'+MD_CB[i].t+'</button>';m.innerHTML='<div class="mt">'+t+'</div>'+(img?'<img src="'+img+'">':'')+'<div class="mb">'+ls.map(function(l){return'<p>'+l+'</p>'}).join('')+'</div><div>'+btns+'</div>'}
+function mClose(){document.getElementById('MD').classList.remove('on')}
+function endScr(tt,dd){auStop();gsSync();gsEnd(tt);document.getElementById('TS').style.display='none';document.getElementById('G').style.display='none';var d=document.createElement('div');d.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:500;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;animation:fu .8s ease-out';d.innerHTML='<div style="color:#8b0000;font-size:2.5rem;font-weight:900;letter-spacing:.2em;margin-bottom:20px;text-shadow:0 0 40px rgba(200,0,0,.5)">'+tt+'</div><div style="color:#888;font-size:1rem;line-height:2;max-width:480px;margin-bottom:40px">'+dd+'</div><button style="padding:14px 40px;font-family:inherit;font-size:1rem;color:#aaa;background:transparent;border:1px solid #444;cursor:pointer;letter-spacing:.15em;transition:all .3s" onmouseover="this.style.borderColor=\'#c22\';this.style.color=\'#fff\'" onmouseout="this.style.borderColor=\'#444\';this.style.color=\'#aaa\'" onclick="rst()">重新开始探索</button>';document.body.appendChild(d)}
+
+// 统计弹窗
+function showStat(type){
+  var s=gsGet(),tt='',bd='';
+  if(type==='ends'){
+    tt='达成结局 ('+s.ends.length+'/8)';
+    ['幸运的你','反抗者','新管理员','瞬间被擒','被困者','逃离','真正的胜利'].forEach(function(e){bd+='<div style="font-size:1rem;margin:8px;color:'+(s.ends.indexOf(e)>=0?'#e8c070':'#333')+'">'+(s.ends.indexOf(e)>=0?'已解锁':'未解锁')+' — '+e+'</div>'});
+  }else{
+    tt='收集物品 ('+s.items.length+'件)';
+    if(s.items.length===0)bd='<div style="color:#555">尚未收集任何物品</div>';
+    else s.items.forEach(function(e){bd+='<div style="color:#e8c070;font-size:.9rem;margin:6px">'+e+'</div>'});
+  }
+  mOpen(tt,null,[bd.replace(/<[^>]*>/g,'')],[{t:'关 闭',a:function(){mClose()}}]);
+  // 手动注入HTML（保留颜色）
+  document.getElementById('MD').querySelector('.mb').innerHTML=bd;
+}
+
+// ====== 房间 ======
+var RM={bedroom:{n:'卧 室',h:'看看电脑——书桌上有台旧台式机',it:[{id:'bed',c:'f1',x:3,y:42,w:28,h:30,l:'床铺'},{id:'desk',c:'f2',x:36,y:40,w:20,h:24,l:'书桌'},{id:'monitor',c:'f3',x:38,y:28,w:16,h:16,l:'电脑'},{id:'closet',c:'f4',x:66,y:12,w:15,h:52,l:'衣柜'},{id:'window',c:'f7',x:3,y:6,w:9,h:16,l:'窗户'},{id:'shelf',c:'f8',x:54,y:52,w:8,h:12,l:'书架'},{id:'photo',c:'f9',x:28,y:8,w:6,h:8,l:'相框'},{id:'floor',c:'fe',x:20,y:72,w:7,h:5,l:'地板'},{id:'ceiling',c:'ff',x:44,y:0,w:12,h:5,l:'天花板'},{id:'nightstand',c:'fc',x:93,y:62,w:5,h:10,l:'床头柜'}],ex:[{x:92,y:22,w:7,h:34,l:'浴室',to:'bathroom',need:'mirrorTask'},{x:90,y:60,w:5,h:18,l:'走廊',to:'hallway'},{x:90,y:78,w:5,h:18,l:'客厅',to:'living'}]},
+bathroom:{n:'浴 室',h:'站到镜子前——念三遍你的名字',it:[{id:'mirror',c:'f5',x:4,y:6,w:24,h:46,l:'镜子'},{id:'sink',c:'fb',x:32,y:50,w:14,h:16,l:'洗手台'},{id:'shower',c:'fa',x:56,y:4,w:24,h:52,l:'淋浴间'},{id:'cabinet',c:'fc',x:34,y:64,w:10,h:14,l:'储物柜'},{id:'toilet',c:'fb',x:74,y:62,w:12,h:14,l:'马桶'},{id:'drain',c:'fe',x:34,y:78,w:5,h:4,l:'地漏'},{id:'towel',c:'f8',x:80,y:18,w:6,h:22,l:'毛巾'}],ex:[{x:92,y:22,w:7,h:38,l:'卧室',to:'bedroom'}]},
+hallway:{n:'走 廊',h:'站在大门前——别从猫眼看',it:[{id:'frontdoor',c:'f6',x:2,y:4,w:20,h:58,l:'大门'},{id:'nbrdoor',c:'fd',x:58,y:4,w:18,h:58,l:'303室'},{id:'lswitch',c:'fe',x:36,y:32,w:5,h:7,l:'开关'},{id:'hallend',c:'ff',x:82,y:18,w:14,h:38,l:'走廊深处'},{id:'doormat',c:'f8',x:6,y:64,w:14,h:6,l:'门垫'},{id:'pipe',c:'fe',x:46,y:2,w:5,h:10,l:'管道'}],ex:[{x:92,y:40,w:7,h:34,l:'卧室',to:'bedroom'},{x:90,y:70,w:5,h:18,l:'地下室',to:'basement'}]},
+living:{n:'客 厅',h:'客厅里有台老电视——打开看看',it:[{id:'tv',c:'fg',x:6,y:10,w:22,h:16,l:'电视'},{id:'sofa',c:'fh',x:36,y:48,w:26,h:20,l:'沙发'},{id:'phone',c:'fk',x:68,y:42,w:10,h:12,l:'电话'},{id:'ltable',c:'fj',x:64,y:56,w:16,h:16,l:'茶几'},{id:'lphoto',c:'f9',x:44,y:14,w:6,h:8,l:'照片'},{id:'curtain',c:'fa',x:2,y:0,w:8,h:60,l:'窗帘'},{id:'rug',c:'fh',x:28,y:66,w:30,h:6,l:'地毯'},{id:'bshelf',c:'f8',x:56,y:20,w:7,h:22,l:'书柜'}],ex:[{x:92,y:60,w:7,h:22,l:'厨房',to:'kitchen'},{x:92,y:30,w:7,h:28,l:'卧室',to:'bedroom'}]},
+kitchen:{n:'厨 房',h:'冰箱里有东西在响——打开它',it:[{id:'fridge',c:'fi',x:4,y:8,w:18,h:48,l:'冰箱'},{id:'ksink',c:'fb',x:30,y:52,w:14,h:14,l:'水槽'},{id:'knife',c:'fl',x:54,y:38,w:7,h:22,l:'刀架'},{id:'ktable',c:'fj',x:64,y:50,w:20,h:18,l:'餐桌'},{id:'kwin',c:'f7',x:48,y:6,w:10,h:16,l:'窗户'},{id:'drawer',c:'fc',x:38,y:68,w:10,h:8,l:'抽屉'},{id:'oven',c:'fi',x:54,y:62,w:14,h:16,l:'烤箱'},{id:'calendar',c:'f9',x:42,y:22,w:5,h:8,l:'日历'}],ex:[{x:92,y:20,w:7,h:40,l:'客厅',to:'living'}]},
+basement:{n:'地下室',h:'这里堆满了旧物——翻翻看',it:[{id:'boxes',c:'f4',x:6,y:30,w:20,h:30,l:'旧纸箱'},{id:'heater',c:'fi',x:32,y:10,w:14,h:40,l:'热水器'},{id:'trunk',c:'f2',x:56,y:44,w:18,h:20,l:'旧箱子'},{id:'newspaper',c:'f8',x:30,y:56,w:12,h:10,l:'旧报纸'},{id:'bmirror',c:'f5',x:74,y:14,w:14,h:30,l:'破镜子'},{id:'corner',c:'ff',x:86,y:10,w:12,h:40,l:'角落'},{id:'pipe2',c:'fe',x:6,y:2,w:8,h:12,l:'管道'}],ex:[{x:92,y:40,w:7,h:38,l:'走廊',to:'hallway'}]}};
+
+function loadRoom(){
+  var sc=document.getElementById('SC'),rm=RM[GS.room];if(!rm){GS.room='bedroom';loadRoom();return}
+  sc.innerHTML='';var tag=document.createElement('div');tag.className='rt';tag.textContent=rm.n;sc.appendChild(tag);
+  rm.it.forEach(function(it){var el=document.createElement('div');el.className='it '+it.c;el.style.cssText='left:'+it.x+'%;top:'+it.y+'%;width:'+it.w+'%;height:'+it.h+'%';el.onclick=function(e){e.stopPropagation();act(it.id)};var lb=document.createElement('div');lb.className='il';lb.textContent=it.l;el.appendChild(lb);sc.appendChild(el)});
+  rm.ex.forEach(function(ex){if(ex.need&&!GS.fl[ex.need])return;var el=document.createElement('div');el.className='ex';el.style.cssText='left:'+ex.x+'%;top:'+ex.y+'%;width:'+ex.w+'%;height:'+ex.h+'%';el.textContent=ex.l;el.onclick=function(){N('走向'+ex.l+'…');GS.room=ex.to;loadRoom();save()};sc.appendChild(el)});
+  H(GS._h||rm.h);
+}
+
+function act(id){
+  if(id==='desk')id='monitor';
+  var a={monitor:function(){if(GS.phase===0){GS.phase=1;save();mOpen('新邮件',AI.forum,['你嘴里一股泥土的腥味。手指甲缝里塞满了黑褐色的碎屑。','电脑已经开着。邮件已经打开。发件人空缺。','<span class="hl">「你已经被邀请了。凌晨三点见。」</span>','发送时间：2003年3月3日。屏幕暗下去的瞬间——反光里看到身后站着一个人。','猛地回头——什么都没有。但旁边那把椅子是温的。'],[{t:'点击链接',a:function(){mClose();FX('flash');GS.fl.mirrorTask=true;save();loadRoom();N('屏幕黑了。暗红色的字洇出来。','r');N('「三更之约。在线人数：13。」','r');N('管理员第一条帖：<span class="hl">第一场游戏——镜中人。</span>','r');N('规则：凌晨三点，关灯，面对镜子，念三遍自己的名字。');N('三号成员：「她在我房间里——」消息断在03:03:03。','r');H('去浴室——站在镜子前完成游戏');TP('凌晨 2:59');addInv('指缝碎屑','手指缝里抠出的腐殖土——不记得碰过')}}])}else if(GS.md&&!GS.kd){var clues=0;if(GS.cf)clues++;if(GS.sf)clues++;if(GS.sof)clues++;if(GS.ph)clues++;if(GS.ff)clues++;if(GS.fl.trunkF)clues++;if(GS.fl.boxesF)clues++;if(clues<2){N('论坛上还没有新帖子。在屋子里多找找线索。');H('多找找线索——至少找到2个关键线索')}else{GS.fl.doorTask=true;save();N('论坛刷新。管理员新帖：<span class="hl">「第二场游戏——开门。」</span>','r');N('四号成员：「不要开。它在我门口。透过猫眼看到它也在往里看。」头像变黑。');H('去走廊——站在大门前。别从猫眼看。');}}else if(GS.kd&&!GS.fl.ended){GS.fl.sevenTask=true;save();mOpen('最后的私信',AI.forum,['论坛只剩你和七号。其他人——灰色的头像。','七号私信：<span class="hl">「林霄——我在公寓外面。出来见我。」</span>','她的措辞太冷静了。不像一个被吓得半死的人。','走廊里有大门。或者——你可以留在家里。'],[{t:'去走廊——见七号',a:function(){mClose();H('去走廊——打开大门见七号');N('七号在大门外等你。','r')}},{t:'留在家里——哪都不去',a:function(){mClose();endScr('幸运的你','你没有去见七号。第二天太阳照常升起——论坛消失了。但你知道，有些东西只是在等下一个凌晨三点。')}},{t:'回复邮件痛骂管理员',a:function(){mClose();endScr('反抗者','你疯狂敲击键盘，发送。屏幕闪烁——论坛消失了。但第二天，警察在公寓里发现了烧毁的电脑——和一张写满「对不起」的便签。')}}]);if(GS.sof&&GS.ph&&!GS.fl.sevenHint){GS.fl.sevenHint=true;save();N('等一下——日记和那个电话。是<span class="hl">七号。</span>她不是受害者——是招募者。','r')}}else{N('电脑屏幕亮着。你不敢看暗下去的屏幕反光。')}},
+  bed:function(){N('被子湿透了——冷汗。不是体温能解释的冷。','r');N('另一个枕头有凹痕。枕下摸到一撮湿漉漉的黑发——不是你的。','r');FX('shake')},
+  closet:function(){if(!GS.cf){GS.cf=true;save();N('柜门吱呀开了。最深处——纸条被钉在木板上。钉子是一枚带血槽的人指甲。','r');N('<span class="hl">「不要玩第二场游戏。不要开门。它一旦进来就不会走了。永远。」</span>纸上沾满干血。','r');addInv('钉着的纸条','被一片人指甲钉在衣柜深处的警告')}else{N('柜门虚掩着。里面有什么在轻轻刮木头。','r');FX('shake')}},
+  window:function(){N('拉开窗帘——外面是实心的黑。不是夜晚——是能吸收光线的物质。','r');N('凑近玻璃——呼出的气没有起雾。雾在玻璃外面。眼睛正对的位置——两个椭圆形雾气。','r')},
+  shelf:function(){if(!GS.sf){GS.sf=true;save();N('旧书里掉出2003年剪报。13名大学生死亡。双眼圆睁。','r');N('照片里有一张脸——很像你。眼角有颗痣，一模一样。','r');addInv('2003年剪报','13名学生死亡新闻。其中一个死者有痣——和你一样')}else{N('剪报还夹在书里。书自动翻到了第13页。')}},
+  photo:function(){N('相框里的照片——你和一群人。不记得这张照片。不认识这些人。');N('背面——指甲刻的字：<span class="hl">「第三轮。你已经玩了两次了。」</span>','r');addInv('刻字的相框','照片背面刻着：第三轮。你已经玩了两次了')},
+  floor:function(){N('踩到松动地板。缝隙里有张折得很小的纸。手绘楼层图。旁边写着：<span class="hl">「最深处。答案在最深处。」</span>','r')},
+  ceiling:function(){N('抬头看天花板。墙角有深褐色霉斑——不是霉斑。是干涸的血迹。','r')},
+  nightstand:function(){N('床头柜上放着一杯水。药瓶底部压着纸条：<span class="hl">「第十一天。已经记不清上次睡觉是什么时候了。」</span>','r')},
+  mirror:function(){if(GS.fl.mirrorTask&&!GS.md){mOpen('镜中人',AI.mirror,['关灯。黑暗吞没一切——只有镜子是个稍浅的方块。','盯着里面的眼睛——那不是倒影该有的眼神。','念名字。一遍。两遍。三遍。嘴唇停下来了——','<span class="hl">镜子里的那张嘴还在动。</span>在说什么你没说出口的话。','凑近——它在尖叫。无声地。指甲抠在玻璃内侧刮出白痕。','镜子里那双手从里面往外推。骨节突出。掌心朝外——掌心上有眼睛。'],[{t:'尖叫后退',a:function(){mClose();GS.md=true;save();FX('flash');N('摔倒在浴室地板上。瓷砖是湿的——不是水。','r');N('回到电脑前——一号头像黑了。最后消息：<span class="hl">「她在我床下。她在看我。她在我嘴里。」</span>','r');H('回卧室看电脑');TP('凌晨 3:04');addInv('镜中笔记','第一场游戏的笔记。上面有不明水渍')}},{t:'伸手摸镜子',a:function(){mClose();GS.md=true;save();FX('shake');N('指尖碰到玻璃——不是冷的。37度。镜子里唇语：<span class="hl">「你已经在里面了。」</span>','r');H('回卧室看电脑');TP('凌晨 3:04');addInv('镜中笔记','第一场游戏的笔记。上面有不明水渍')}}])}else if(GS.md){N('瞥了一眼镜子。倒影还在看你。在默念你的名字。','r')}else{N('镜子里你的倒影——黑眼圈很重。倒影比你提前眨了眼睛。','r')}},
+  sink:function(){N('拧开水龙头——深红色液体。温热的。粘稠的。关上。掌心多了一道细小伤口。','r')},
+  shower:function(){N('拉开浴帘——下水口堵着一大团湿漉漉的黑发。扯不动。深处传来闷响。','r');FX('shake')},
+  cabinet:function(){N('打开储物柜。一瓶安眠药——空的。三十片。药瓶下面压着纸：<span class="hl">「别睡。你一睡它就会进来。已经挺了七天。」</span>','r');addInv('药瓶和纸条','空安眠药瓶，下面压着你自己的笔迹')},
+  toilet:function(){N('掀开马桶盖——水里有什么在晃动。黑色的。像头发——在水面下缓缓游动。','r')},
+  drain:function(){N('地上的排水口。一撮头发堵在里面——还在往下水道里慢慢缩。','r')},
+  towel:function(){N('毛巾是湿的。但今天还没洗过澡。背面沾着很淡的粉红色。','r')},
+  frontdoor:function(){var u=GS.fl.doorTried;if(GS.fl.doorTask&&!GS.kd&&!u){GS.fl.doorTried=true;save();mOpen('开门',AI.door,['凌晨三点三十三分。手放到门把手上——把手是温的，湿的。','打开门。走廊一片漆黑。脚步声——湿漉漉的拍打声。','在你门口停住。<span class="hl">咚。</span>','一滴温热的液体落在肩膀上。又滴了一滴。在头顶。'],[{t:'抬头看',a:function(){mClose();GS.kd=true;save();FX('flash');N('天花板上——一对湿脚印。倒悬着往房间方向延伸。进入床底。','r');N('床单在动——下面有东西盯着你。两个亮点在眨。','r');H('回卧室看电脑');addInv('湿足迹','天花板上倒悬的湿脚印，延伸进了床底')}},{t:'关门',a:function(){mClose();GS.kd=true;save();FX('shake');N('猛摔上门。敲门声疯了。抵住——停了。猫眼——纯黑。巨大眼球移过来——虹膜白的瞳孔红的。','r');N('门缝下塞进纸条和一片指甲：<span class="hl">「它已经在里面了。一直都在。」</span>','r');H('回卧室看电脑');addInv('塞进门的纸条','一片指甲和一张纸条：它已经在里面了。一直都在')}}])}else if(GS.kd&&GS.fl.sevenTask){N('七号就在这扇门的外面。她在等你。','r');H('开门还是回家？');var b1=document.createElement('button');b1.className='mbtn';b1.textContent='打开门——去见七号';b1.style.margin='4px';b1.onclick=function(){document.getElementById('SC').innerHTML='';chaseDialog()};var b2=document.createElement('button');b2.className='mbtn';b2.textContent='转身回家';b2.style.margin='4px';b2.onclick=function(){endScr('幸运的你','你转身离开。第二天太阳照常升起。');};document.getElementById('NR').appendChild(b1);document.getElementById('NR').appendChild(b2)}else if(u){N('站到门前——门把手自己在轻轻转动。停了。又开始。','r')}else{N('大门。门锁完好。门下缝隙慢慢渗进一小滩深色液体。','r')}},
+  nbrdoor:function(){N('303室。敲了敲——没人应答。转身要走——门里传出脚步声。和你同步的。','r')},
+  lswitch:function(){N('按下开关——没亮。但开关不再是塑料的冰冷——温热，柔软。底下有什么在搏动。','r')},
+  hallend:function(){N('走廊尽头沉在一片实心的黑暗里。它是活的。在呼吸。','r')},
+  doormat:function(){N('门垫下面压着几封信。给303室住户。全都没拆封。更早的已被水浸透。','r')},
+  pipe:function(){N('墙壁上的暖气管。耳朵贴上去——听到了声音。不是水流——是有人在说话。','r')},
+  tv:function(){if(!GS.fl.tvOn){GS.fl.tvOn=true;save();FX('flash');N('老电视。按了开关——屏幕亮了。雪花噪点里有一张脸：<span class="hl">「第三轮了……你已经死过两次了……」</span>','r')}else{N('电视开着。那张模糊的脸还在。还在说话。')}},
+  sofa:function(){if(!GS.sof){GS.sof=true;save();N('沙发垫子下面——一本日记。封面上是你的名字。去年。','r');N('<span class="hl">「第三天。有一个叫七号的人联系了我。她问我能不能加入。」「她不是受害者。她是招募者。」</span>','r');addInv('旧日记','去年日记。记录了被七号召募的经历')}else{N('沙发上有个凹陷——人的形状。但没有人。')}},
+  phone:function(){if(!GS.ph){GS.ph=true;save();N('老式座机。拿起听筒——拨号音。夹杂着呼吸声。');N('<span class="hl">「你是第十三号。七号会来接你的。她每次都来接。」</span>挂断。','r')}else{N('电话线被拔了。但拿起听筒——还是有拨号音。还是有人在笑。')}},
+  ltable:function(){N('茶几上放着一杯水。杯底沉着一些黑色碎屑。','r')},
+  lphoto:function(){N('墙上照片——你和一群论坛成员。中间瘦削女人站在你旁边。背面标注：<span class="hl">"七号——招募者"</span>。','r');addInv('客厅照片','照片上七号站在你身边——她不是受害者，是招募者')},
+  curtain:function(){N('厚重的窗帘。路灯全灭了。街对面的窗户里亮了一下。有人在看你。','r')},
+  rug:function(){if(!GS.fl.rugF){GS.fl.rugF=true;save();N('掀开地毯一角——地板上有深深的抓痕。像人用指甲抠的。','r');addInv('地板抓痕','地毯下的抓痕')}else{N('地毯盖着抓痕。没有掀开它。')}},
+  bshelf:function(){N('书柜里有一排录像带。标签：2003.3.3，2007.3.3...每三年一盘。总共八盘。最后一盘只写了"2026"。','r')},
+  fridge:function(){if(!GS.ff){GS.ff=true;save();N('打开冰箱——中间一层一个玻璃罐。泡着几颗人的臼齿。标签：<span class="hl">「第三轮收集。还差三颗。」</span>','r');addInv('装满牙齿的罐子','冰箱里的玻璃罐，泡着臼齿')}else{N('冰箱嗡鸣。罐子还在——好像比上次多了一颗。','r')}},
+  ksink:function(){N('水槽里堆着没洗的碗。排水口里有什么在动——黑色的，像头发。往上涌。','r')},
+  knife:function(){if(!GS.kf){GS.kf=true;save();N('刀架上有五把刀。四把在——最外面那把最大的不见了。在旁边灶台上找到了。','r');addInv('带血的刀','刀刃上沾着干涸痕迹')}else{N('那把最大的刀不见了。不在灶台上。在哪里？','r')}},
+  ktable:function(){N('餐桌上放着一张手绘楼层平面图。你的公寓。每个房间都画了叉。地下室最多——七个叉。','r')},
+  kwin:function(){N('厨房的窗户——外面纯黑。黑暗里有什么在移动。一对发白的亮点。在靠近。','r')},
+  drawer:function(){if(!GS.fl.drawerF){GS.fl.drawerF=true;save();N('拉开抽屉——一叠旧信封。收件人都是你。里面一张照片——是你，穿着不认识的衣服。','r');addInv('抽屉里的照片','你的照片，穿着不认识的衣服')}else{N('抽屉里的信封还在。没有打开它们。')}},
+  oven:function(){N('打开烤箱——很干净。门上贴着一张便签：<span class="hl">「别开煤气。上次差点成功了。」</span>你的笔迹。','r')},
+  calendar:function(){N('墙上旧日历。三月三日被红笔圈了起来——圈了八次。2026的红圈只画了半个。','r')},
+  boxes:function(){if(!GS.fl.boxesF){GS.fl.boxesF=true;save();N('几个积满灰尘的纸箱。里面全是旧衣服。箱底压着纸条：<span class="hl">「第三轮。你每次都会忘。每次都会重新来。」</span>','r');addInv('箱子里的纸条','第三轮，你每次都会忘')}else{N('箱子被翻过了。灰尘上有手印——你的手印。')}},
+  heater:function(){N('老式热水器。管道嗡嗡作响。夏天没人开热水器。<span class="hl">管道里传出敲击声。</span>三下，停，三下。','r');addInv('热水器','管道里传出敲击声——三下，停，三下')},
+  trunk:function(){if(!GS.fl.trunkF){GS.fl.trunkF=true;save();N('锁着的旧箱子。锁锈坏了——打开。里面全是失踪人口档案。最后一份封面——贴着你的照片。','r');addInv('失踪档案','旧箱子里的失踪人口档案——最后一份贴着你的照片')}else{N('箱子开着的。档案还在。')}},
+  newspaper:function(){N('发黄的旧报纸。头版："13名大学生集体死亡。"每三年一次。','r')},
+  bmirror:function(){N('被布盖着的破镜子。镜面上全是裂纹。裂纹中心是一个手掌印——从镜子内侧按出来的。','r')},
+  corner:function(){N('地下室角落特别暗。不是光线问题——是实心的黑。有什么东西蜷缩在里面。在呼吸。','r')},
+  pipe2:function(){N('天花板上裸露的管道。水滴渗出——每三秒一滴。节奏太规律了。不像漏水。','r')}};
+  if(a[id])a[id]();else N('没什么特别的。');save();
+}
+
+// ====== 追逐系统 ======
+var CH={active:false,px:50,py:50,clones:[],timer:30,keys:{},spCd:0,vx:0,vy:0,charge:0,chgCd:0,bridges:[]};
+var PH=[10,30,50,70,90],PV=[12,32,55,78];
+function snap(x,y){var bx=x,by=y,bd=99;PH.forEach(function(h){var d=Math.abs(y-h);if(d<bd){bd=d;bx=x;by=h}});PV.forEach(function(v){var d=Math.abs(x-v);if(d<bd){bd=d;bx=v;by=y}});var diag=[{x1:12,y1:10,x2:78,y2:90},{x1:78,y1:10,x2:12,y2:90}];diag.forEach(function(dg){var dx=x-dg.x1,dy=y-dg.y1,lx=dg.x2-dg.x1,ly=dg.y2-dg.y1,len=Math.sqrt(lx*lx+ly*ly);if(len>0){var t=Math.max(0,Math.min(1,(dx*lx+dy*ly)/(len*len))),px=dg.x1+t*lx,py=dg.y1+t*ly,d=Math.sqrt((x-px)*(x-px)+(y-py)*(y-py));if(d<12&&d<bd){bd=d;bx=px;by=py}}});PH.forEach(function(h){PV.forEach(function(v){var dx=Math.abs(x-v),dy=Math.abs(y-h);if(dx<6&&dy<6&&dx+dy<bd){bd=dx+dy;bx=v;by=h}})});return{x:Math.max(2,Math.min(95,bx)),y:Math.max(5,Math.min(90,by))}}
+
+function chaseDialog(){
+  var sc=document.getElementById('SC');sc.innerHTML='';var tag=document.createElement('div');tag.className='rt';tag.textContent='公寓外';sc.appendChild(tag);
+  var ov=document.createElement('div');ov.id='COV';ov.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:45;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(80,0,0,.3))';sc.appendChild(ov);
+  var rd=document.createElement('div');rd.id='CRD';rd.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:42;pointer-events:none';
+  PH.forEach(function(y){var r=document.createElement('div');r.style.cssText='position:absolute;left:2%;width:96%;top:'+y+'%;height:14px;background:rgba(80,30,30,.3);border-radius:7px';rd.appendChild(r)});
+  PV.forEach(function(x){var r=document.createElement('div');r.style.cssText='position:absolute;top:2%;height:96%;left:'+x+'%;width:14px;background:rgba(80,30,30,.3);border-radius:7px';rd.appendChild(r)});
+  var d1=document.createElement('div');d1.style.cssText='position:absolute;left:12%;top:10%;width:10px;height:72%;background:linear-gradient(180deg,rgba(100,40,40,.4),rgba(100,30,30,.4));border-radius:5px;transform-origin:top center;transform:rotate(43deg)';rd.appendChild(d1);
+  var d2=document.createElement('div');d2.style.cssText='position:absolute;left:78%;top:10%;width:10px;height:72%;background:linear-gradient(180deg,rgba(100,40,40,.4),rgba(100,30,30,.4));border-radius:5px;transform-origin:top center;transform:rotate(-43deg)';rd.appendChild(d2);
+  var bridges=[{x:5,y:10,w:8,h:4,el:null,life:5},{x:65,y:48,w:8,h:4,el:null,life:5},{x:5,y:68,w:8,h:4,el:null,life:5}];CH.bridges=bridges;
+  bridges.forEach(function(b){var r=document.createElement('div');b.el=r;r.style.cssText='position:absolute;left:'+b.x+'%;top:'+b.y+'%;width:'+b.w+'%;height:'+b.h+'%;background:rgba(40,60,80,.4);border:2px solid rgba(60,100,160,.5);border-radius:3px;box-shadow:0 0 10px rgba(60,100,180,.3);z-index:43';rd.appendChild(r)});
+  sc.appendChild(rd);
+  var ch=document.createElement('div');ch.id='CCH';ch.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:50';
+  ch.innerHTML='<div id="CT" style="position:absolute;top:15px;left:50%;transform:translateX(-50%);font-size:2.5rem;font-weight:900;color:#f44;text-shadow:0 0 20px rgba(255,0,0,.6);z-index:60;pointer-events:none">30</div><div id="CP" style="position:absolute;width:20px;height:20px;background:radial-gradient(circle,#f88,#d00);border-radius:50%;z-index:55;box-shadow:0 0 16px rgba(255,0,0,.7)"></div><div id="CW" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2rem;font-weight:900;color:#f00;z-index:65;pointer-events:none;opacity:0">⚠</div><div id="CBA" style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);width:200px;height:10px;background:#1a0000;border:1px solid #400;border-radius:5px;z-index:70;pointer-events:none;opacity:0"><div id="CBF" style="width:0%;height:100%;background:linear-gradient(90deg,#600,#f00);border-radius:4px;transition:width .15s"></div></div><div id="CK" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:.85rem;color:#ff0;text-shadow:0 0 10px rgba(255,200,0,.8);z-index:70;pointer-events:none;opacity:0">连按空格蓄力反击</div>';sc.appendChild(ch);
+  N('推开门，走到公寓外面。冷风。黑暗。路灯不亮。','r');N('七号站在几米外——瘦削的身影。','r');N('「林霄——你来了。」然后她开始笑。癫狂的大笑。','r');N('<span class="hl">「你以为我是受害者？二十三年来——每三年十三个。」</span>','r');H('七号在等你回答……');
+  var b1=document.createElement('button');b1.className='mbtn';b1.textContent='跟七号出去';b1.style.margin='4px';b1.onclick=function(){chaseEnd('trapped')};
+  var b2=document.createElement('button');b2.className='mbtn';b2.textContent='不——转身就跑';b2.style.margin='4px';b2.onclick=function(){N('七号的脸扭曲了——然后开始追。','r');startChase()};
+  document.getElementById('NR').appendChild(b1);document.getElementById('NR').appendChild(b2);
+}
+
+function spawnClone(x,y){var el=document.createElement('div');el.style.cssText='position:absolute;width:24px;height:30px;background:linear-gradient(180deg,#2a0a0a,#0a0000);border:2px solid #411;border-radius:5px 5px 3px 3px;z-index:56;box-shadow:0 0 18px rgba(150,0,0,.5);left:'+x+'%;top:'+y+'%;animation:spPop .3s ease-out';el.innerHTML='<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#700;font-size:.7rem;font-weight:bold">七</span>';document.getElementById('CCH').appendChild(el);CH.clones.push({el:el,qx:x,qy:y,born:CH.timer})}
+
+function startChase(){
+  document.getElementById('NR').querySelectorAll('button').forEach(function(b){b.remove()});
+  auChase();var ov=document.getElementById('COV');if(ov)ov.style.opacity='0.6';
+  CH.active=true;CH.px=50;CH.py=50;CH.clones=[];CH.timer=30;CH.spCd=0;CH.keys={};CH.vx=0;CH.vy=0;CH.charge=0;CH.chgCd=0;CH.rageCd=2;CH.rageOn=false;CH.rageTimer=0;CH.sid=(CH.sid||0)+1;var sid=CH.sid;
+  document.getElementById('CT').textContent='30';document.getElementById('CBF').style.width='0%';
+  document.getElementById('CP').style.left='50%';document.getElementById('CP').style.top='50%';spawnClone(12,10);spawnClone(78,90);
+  var hasKnife=GS.inv.some(function(i){return i.n==='带血的刀'});
+  if(hasKnife){document.getElementById('CK').style.opacity='1';document.getElementById('CBA').style.opacity='1';H('WASD移动——连按空格键蓄力反击！')}else{H('WASD沿道路移动——躲避七号分身！30秒！')}
+  if(CH._kd)document.removeEventListener('keydown',CH._kd);if(CH._ku)document.removeEventListener('keyup',CH._ku);if(CH._ks)document.removeEventListener('keydown',CH._ks);
+  CH._kd=function(e){if(!CH.active)return;var k=e.key;if(k==='w'||k==='W'||k==='ArrowUp'||k==='s'||k==='S'||k==='ArrowDown'||k==='a'||k==='A'||k==='ArrowLeft'||k==='d'||k==='D'||k==='ArrowRight'){e.preventDefault();CH.keys[k]=true}};
+  CH._ku=function(e){CH.keys[e.key]=false};document.addEventListener('keydown',CH._kd);document.addEventListener('keyup',CH._ku);
+  CH._ks=function(e){if(!CH.active||e.code!=='Space'||CH.sid!==sid)return;e.preventDefault();if(!hasKnife)return;var md=99;for(var i=0;i<CH.clones.length;i++){var c=CH.clones[i],dx=CH.px-c.qx,dy=CH.py-c.qy,d=Math.sqrt(dx*dx+dy*dy);if(d<md)md=d}if(md<25){CH.charge=Math.min(100,CH.charge+20);CH.chgCd=0;sfx('flash');document.getElementById('CBF').style.width=CH.charge+'%';if(CH.charge>=100&&CH.sid===sid){chaseEnd('killed')}}else{sfx('scare');N('太远了！靠近七号分身再按空格！','r')}};document.addEventListener('keydown',CH._ks);
+  var lt=0;
+  function loop(now){if(!CH.active)return;if(!lt)lt=now;var dt=Math.min((now-lt)/1000,.1);lt=now;if(dt<=0){requestAnimationFrame(loop);return}
+    if(CH.charge>0){CH.chgCd+=dt;if(CH.chgCd>=1){CH.charge=Math.max(0,CH.charge-15*dt);CH.chgCd=1}document.getElementById('CBF').style.width=CH.charge+'%'}
+    // 狂暴循环
+    CH.rageCd-=dt;if(CH.rageCd<=0&&!CH.rageOn){CH.rageOn=true;CH.rageTimer=3;CH.rageCd=2}if(CH.rageOn){CH.rageTimer-=dt;if(CH.rageTimer<=0){CH.rageOn=false;CH.rageCd=2}}
+    var tvx=0,tvy=0;if(CH.keys.w||CH.keys.W||CH.keys.ArrowUp)tvy=-28;if(CH.keys.s||CH.keys.S||CH.keys.ArrowDown)tvy=28;if(CH.keys.a||CH.keys.A||CH.keys.ArrowLeft)tvx=-28;if(CH.keys.d||CH.keys.D||CH.keys.ArrowRight)tvx=28;
+    CH.vx+=(tvx-CH.vx)*(tvx===0?80:120)*dt;CH.vy+=(tvy-CH.vy)*(tvy===0?80:120)*dt;if(Math.abs(CH.vx)<.1)CH.vx=0;if(Math.abs(CH.vy)<.1)CH.vy=0;
+    CH.px+=CH.vx*dt;CH.py+=CH.vy*dt;var sp=snap(CH.px,CH.py);CH.px+=(sp.x-CH.px)*.3;CH.py+=(sp.y-CH.py)*.3;CH.px=Math.max(2,Math.min(95,CH.px));CH.py=Math.max(5,Math.min(90,CH.py));
+    document.getElementById('CP').style.left=CH.px+'%';document.getElementById('CP').style.top=CH.py+'%';
+    CH.spCd+=dt;if(CH.spCd>=10&&CH.clones.length<4){CH.spCd=0;var sy=PH[Math.floor(Math.random()*PH.length)],sx=PV[Math.floor(Math.random()*PV.length)],gx=Math.random()>.5?sx:Math.random()*80+5,gy=sy;if(Math.sqrt((CH.px-gx)*(CH.px-gx)+(CH.py-gy)*(CH.py-gy))<40){gx=(gx+40)%85;gy=(gy+35)%80}spawnClone(gx,gy);sfx('spawn')}
+    var onBridge=false,pOnB=false;
+    if(CH.bridges){for(var bi=CH.bridges.length-1;bi>=0;bi--){var b=CH.bridges[bi];if(!b.el)continue;pOnB=CH.px>=b.x&&CH.px<=b.x+b.w&&CH.py>=b.y&&CH.py<=b.y+b.h;if(pOnB)onBridge=true;var cOnB=false;for(var ci=0;ci<CH.clones.length;ci++){var cc=CH.clones[ci];if(!cc.el)continue;if(cc.qx>=b.x&&cc.qx<=b.x+b.w&&cc.qy>=b.y&&cc.qy<=b.y+b.h){cOnB=true;break}}if(pOnB||cOnB){b.life-=dt;if(b.life<=0){b.el.style.opacity='0';setTimeout(function(){if(b.el)b.el.remove()},300);CH.bridges.splice(bi,1)}}}}
+    var md=999,psp=snap(CH.px,CH.py);
+    for(var i=CH.clones.length-1;i>=0;i--){var c=CH.clones[i];if(!c.el)continue;if(c.born&&CH.timer<=c.born-10){c.el.remove();CH.clones.splice(i,1);continue}
+      if(onBridge){if(!c.wDir||Math.random()<.02)c.wDir=Math.floor(Math.random()*4);var wspd=3*(CH.rageOn?3:1);if(c.wDir===0)c.qy-=wspd*dt;else if(c.wDir===1)c.qy+=wspd*dt;else if(c.wDir===2)c.qx-=wspd*dt;else c.qx+=wspd*dt;var sn2=snap(c.qx,c.qy);c.qx=sn2.x;c.qy=sn2.y;c.el.style.left=c.qx+'%';c.el.style.top=c.qy+'%';var dd2=Math.sqrt((CH.px-c.qx)*(CH.px-c.qx)+(CH.py-c.qy)*(CH.py-c.qy));if(dd2<md)md=dd2;continue}
+      var onH=false,onV=false,bestH=0,bestV=0,hD=99,vD=99;PH.forEach(function(h){var d=Math.abs(c.qy-h);if(d<8&&d<hD){onH=true;bestH=h;hD=d}});PV.forEach(function(v){var d=Math.abs(c.qx-v);if(d<8&&d<vD){onV=true;bestV=v;vD=d}});
+      var spd=(4+(30-CH.timer)*.3)*(CH.rageOn?3:1);
+      if(onH&&!onV){c.qy=bestH;var dx=psp.x-c.qx;if(Math.abs(dx)>.5)c.qx+=Math.sign(dx)*spd*dt;c._road='h'}else if(onV&&!onH){c.qx=bestV;var dy=psp.y-c.qy;if(Math.abs(dy)>.5)c.qy+=Math.sign(dy)*spd*dt;c._road='v'}else{// 交叉口：优先保持当前道路，除非另一条明显更近
+        var preferH=Math.abs(psp.x-c.qx)>Math.abs(psp.y-c.qy)*1.5;
+        if(!c._road||(c._road==='h'&&preferH)||(c._road==='v'&&!preferH)){if(preferH||(!c._road&&Math.abs(psp.x-c.qx)>Math.abs(psp.y-c.qy))){c.qy=bestH;c.qx+=Math.sign(psp.x-c.qx)*spd*dt;c._road='h'}else{c.qx=bestV;c.qy+=Math.sign(psp.y-c.qy)*spd*dt;c._road='v'}}else{if(c._road==='h'){c.qy=bestH;c.qx+=Math.sign(psp.x-c.qx)*spd*dt}else{c.qx=bestV;c.qy+=Math.sign(psp.y-c.qy)*spd*dt}}}
+      c.qx=Math.max(2,Math.min(95,c.qx));c.qy=Math.max(5,Math.min(90,c.qy));
+      if(!c._lx){c._lx=c.qx;c._ly=c.qy;c._st=0}var moved=Math.abs(c.qx-c._lx)+Math.abs(c.qy-c._ly);c._lx=c.qx;c._ly=c.qy;if(moved<.05){c._st+=dt;if(c._st>.8){c.qx+=(Math.random()-.5)*8;c.qy+=(Math.random()-.5)*8;c._st=0}}else{c._st=0}
+      var dx=CH.px-c.qx,dy=CH.py-c.qy,dist=Math.sqrt(dx*dx+dy*dy);if(dist<md)md=dist;
+      c.el.style.boxShadow=CH.rageOn?'0 0 30px rgba(255,80,0,.9),0 0 12px rgba(255,30,0,.6)':'0 0 18px rgba(150,0,0,.5)';c.el.style.left=c.qx+'%';c.el.style.top=c.qy+'%'}
+    CH.timer-=dt;var t=Math.ceil(CH.timer),ct=document.getElementById('CT');if(t!==CH._lt){CH._lt=t;ct.textContent=t;if(t<=5)ct.style.color='#f00';else if(t<=15)ct.style.color='#f80';else ct.style.color='#f44'}
+    if(!CH._ltk||now-CH._ltk>100){CH._ltk=now;if(ov)ov.style.opacity=.4+Math.min(.6,(30-CH.timer)/20)*.5+Math.max(0,(20-md)/20)*.3;var w=document.getElementById('CW');if(w)w.style.opacity=md<15?(Math.sin(now/150)>0?1:0):0;if(md<8)document.getElementById('SC').style.transform='translate('+(Math.random()*4-2)+'px,'+(Math.random()*4-2)+'px)';else document.getElementById('SC').style.transform='';var ct2=document.getElementById('CT');if(CH.rageOn)ct2.style.textShadow='0 0 30px rgba(255,100,0,.9),0 0 60px rgba(255,50,0,.6)';else ct2.style.textShadow='0 0 20px rgba(255,0,0,.6)'}
+    if(md<3.5){chaseEnd(CH.timer>25?'quick':'caught');return}if(CH.timer<=0){chaseEnd('escaped');return}
+    requestAnimationFrame(loop);
+  }requestAnimationFrame(loop);
+}
+
+function chaseEnd(r){CH.active=false;if(CH._kd)document.removeEventListener('keydown',CH._kd);if(CH._ku)document.removeEventListener('keyup',CH._ku);if(CH._ks)document.removeEventListener('keydown',CH._ks);auEndChase();sfx('end');document.getElementById('SC').style.transform='';CH.clones.forEach(function(c){if(c.el)c.el.remove()});CH.clones=[];var el=document.getElementById('CCH');if(el)el.remove();el=document.getElementById('COV');if(el)el.remove();el=document.getElementById('CRD');if(el)el.remove();GS.fl.ended=true;save();if(r==='trapped')endScr('新管理员','你信任了七号，走进了黑暗。从此成为论坛新的管理者。');else if(r==='quick')endScr('瞬间被擒','你甚至来不及反应——七号的手已经掐住了你的喉咙。');else if(r==='caught')endScr('被困者','七号的分身抓住了你。二十三年间她抓过无数人。');else if(r==='killed')endScr('真正的胜利','蓄力条满的瞬间——你冲向七号。刀刃刺穿她的身体，所有分身碎裂。他低头看伤口，笑了。终于有人做到了。循环结束。你赢了。');else{var all=GS.inv.length>=8;if(all){var st=gsGet();st.truthNote=true;localStorage.setItem('s3y_stats',JSON.stringify(st));endScr('逃离','三十秒像三十年。七号的分身们停住了。天边泛白，你活下来了。你瞥见床上有东西——一张之前没见过的纸条。也许该回去看看。')}else{endScr('逃离','三十秒像三十年。七号的分身们停住了。天边泛白，你活下来了。');}}}
+
+// ====== 标题粒子 ======
+(function(){var p=document.getElementById('TSP');if(!p)return;for(var i=0;i<40;i++){var d=document.createElement('div');d.className='td';d.style.left=Math.random()*100+'%';d.style.animationDuration=(Math.random()*8+6)+'s';d.style.animationDelay=(Math.random()*10)+'s';d.style.height=(Math.random()*40+30)+'px';p.appendChild(d)}})();
+
+// ====== 按钮 ======
+document.getElementById('BT1').addEventListener('click',function(){
+  GS.room='bedroom';GS.phase=0;GS.inv=[];GS.fl={};GS.md=GS.kd=false;GS.cf=GS.sf=GS.sof=GS.ph=GS.ff=GS.kf=false;save();document.getElementById('TS').style.display='none';document.getElementById('G').style.display='flex';auPlay();loadRoom();refInv();H(RM[GS.room].h)});
+document.getElementById('BT2').addEventListener('click',function(){
+  try{if(!localStorage.getItem('s3y'))return}catch(e){};document.getElementById('TS').style.display='none';document.getElementById('G').style.display='flex';auPlay();loadRoom();refInv();H(RM[GS.room].h)});
+document.getElementById('BTE').addEventListener('click',function(){showStat('ends')});
+document.getElementById('BTI').addEventListener('click',function(){showStat('items')});
+try{if(!localStorage.getItem('s3y')){document.getElementById('BT2').style.opacity='0.3';document.getElementById('BT2').style.pointerEvents='none'}}catch(e){}
+</script></body></html>
