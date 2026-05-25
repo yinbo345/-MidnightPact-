@@ -7,7 +7,7 @@ body{background:#000;color:var(--paper);font-family:'Noto Serif SC',SimSun,serif
 #app{width:100vw;height:100vh;position:relative;overflow:hidden;background:var(--bg)}
 
 /* ============ 场景层 ============ */
-#scene{position:absolute;top:0;left:0;width:100%;height:calc(100% - 200px);transition:opacity 1s}
+#scene{position:absolute;top:0;left:0;width:100%;height:100%;transition:opacity 1s}
 .sv{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity 1.2s;pointer-events:none}
 .sv.active{opacity:1;pointer-events:auto}
 
@@ -185,8 +185,8 @@ function ask(opts,cb){
 }
 
 // 特效
-function fadeIn(cb){fade.classList.add('on');setTimeout(()=>{if(cb)cb();setTimeout(()=>fade.classList.remove('on'),100)},800)}
-function fadeOut(cb){fade.classList.remove('on');setTimeout(()=>{if(cb)cb()},800)}
+function fadeIn(cb){fade.classList.add('on');setTimeout(()=>{if(cb)cb();setTimeout(()=>fade.classList.remove('on'),50)},600)}
+function fadeOut(cb){fade.classList.remove('on');if(cb)setTimeout(cb,600)}
 
 // 结局
 function ending(t,d){
@@ -204,10 +204,9 @@ function backToTitle(){
 let curScene='';
 
 function loadScene(id){
-  curScene=id;sc.innerHTML='';ch.innerHTML='';rn.textContent='';
+  curScene=id;sc.style.display='block';sc.innerHTML='';ch.innerHTML='';rn.textContent='';
   let sv=document.createElement('div');sv.className='sv';sv.id='sv_'+id;sc.appendChild(sv);
-  setTimeout(()=>sv.classList.add('active'),50);
-  buildScene(id,sv);
+  requestAnimationFrame(()=>{sv.classList.add('active');buildScene(id,sv)})
 }
 
 function buildScene(id,sv){
@@ -232,7 +231,7 @@ function addFireflies(sv){
 }
 
 function hot(el,x,y,w,h,hint,onclick){
-  el.style.cssText+='left:'+x+'%;top:'+y+'%;width:'+w+'%;height:'+h+'%';
+  el.style.left=x+'%';el.style.top=y+'%';el.style.width=w+'%';el.style.height=h+'%';
   el.className+=' hot';el.setAttribute('data-hint',hint);
   el.onclick=onclick
 }
@@ -524,7 +523,9 @@ function newGame(){
   $('title').style.display='none';
   fadeIn(()=>{
     loadScene('entrance');
-    dl3('',null,['民国三十七年。秋天。','你是一名报社记者。三天前收到一封匿名信——信里只有一张照片和一个地名。青石村。','你查了三天——关于青石村，几乎没有任何记录。只有一份两年前的新闻：青石村大火。村民全部失踪。','今天——你站在通往村子的山路上。晨雾很重。雾气里闻到了一股说不清的味道。像什么东西烧焦了——又像香烛。'],fadeOut)
+    setTimeout(()=>{
+      dl3('',null,['民国三十七年。秋天。','你是一名报社记者。三天前收到一封匿名信——信里只有一张照片和一个地名。青石村。','你查了三天——关于青石村，几乎没有任何记录。只有一份两年前的新闻：青石村大火。村民全部失踪。','今天——你站在通往村子的山路上。晨雾很重。雾气里闻到了一股说不清的味道。像什么东西烧焦了——又像香烛。'],fadeOut)
+    },300)
   })
 }
 
