@@ -1,0 +1,531 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>冥婚之约 — GhostBride</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050505;color:#c8c0b8;font-family:'Noto Serif SC',SimSun,serif;overflow:hidden;user-select:none;height:100vh;display:flex;justify-content:center;align-items:center}
+#app{width:100%;max-width:1200px;height:100vh;position:relative;overflow:hidden}
+/* 场景背景 */
+#scene{position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 50% 70%,#1a1008,#080503 60%,#020100);transition:background 1.5s}
+#scene.bg_entrance{background:radial-gradient(ellipse at 30% 80%,#1a1208,#080402 50%,#020100)}
+#scene.bg_hall{background:radial-gradient(ellipse at 50% 60%,#140a04,#060302 50%,#010000)}
+#scene.bg_mansion{background:radial-gradient(ellipse at 40% 70%,#180804,#050201 50%,#010000)}
+#scene.bg_mountain{background:radial-gradient(ellipse at 50% 85%,#121010,#040303 50%,#010101)}
+#scene.bg_cave{background:radial-gradient(ellipse at 50% 50%,#0a0604,#020101 50%,#000)}
+#scene.bg_chamber{background:radial-gradient(ellipse at 50% 40%,#200a08,#080201 50%,#020000)}
+/* 雾效 */
+#fog{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:.15;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 800 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.015' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+/* 粒子 */
+.pt{position:absolute;width:2px;height:2px;background:rgba(200,150,80,.4);border-radius:50%;pointer-events:none;animation:ptF linear infinite}
+@keyframes ptF{0%{transform:translateY(0);opacity:0}10%{opacity:.8}90%{opacity:.2}100%{transform:translateY(-600px);opacity:0}}
+/* UI层 */
+#ui{position:absolute;bottom:0;left:0;width:100%;z-index:10;pointer-events:none}
+#ui>*{pointer-events:auto}
+/* 对话框 */
+#dialog{position:absolute;bottom:0;left:0;width:100%;background:linear-gradient(0deg,rgba(5,3,0,.95) 60%,transparent);padding:40px 60px 30px;transition:opacity .5s}
+#dialog .spk{font-size:.8rem;color:#8b4513;letter-spacing:.3em;margin-bottom:8px;text-transform:uppercase}
+#dialog .txt{font-size:1.15rem;line-height:2;color:#d4c8b8;max-width:800px;text-shadow:0 0 2px rgba(200,150,80,.3)}
+#dialog .txt em{color:#c0392b;font-style:normal;font-weight:bold}
+.hl_red{color:#c0392b;font-weight:bold}
+.hl_gold{color:#d4a017;font-weight:bold}
+/* 选项 */
+#choices{position:absolute;bottom:180px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:11;min-width:300px}
+.ch_btn{font-family:inherit;font-size:1rem;padding:14px 32px;background:rgba(20,10,5,.85);border:1px solid #3a2818;color:#c8b8a0;cursor:pointer;text-align:left;transition:all .3s;letter-spacing:.05em}
+.ch_btn:hover{background:rgba(60,20,10,.9);border-color:#8b4513;color:#e8c070;padding-left:40px;box-shadow:0 0 20px rgba(139,69,19,.3)}
+/* 场景标题 */
+#loc_tit{position:absolute;top:30px;left:50%;transform:translateX(-50%);font-size:2rem;font-weight:900;color:rgba(200,50,30,.6);letter-spacing:.5em;z-index:5;pointer-events:none;transition:all 1s;text-shadow:0 0 30px rgba(200,30,30,.3)}
+/* 物品栏 */
+#inv{position:absolute;top:20px;right:20px;z-index:10;display:flex;flex-direction:column;gap:6px}
+.inv_btn{font-family:inherit;font-size:.75rem;padding:8px 16px;background:rgba(20,10,5,.7);border:1px solid #3a2818;color:#a08060;cursor:pointer;transition:all .3s;letter-spacing:.1em}
+.inv_btn:hover{background:rgba(60,30,15,.8);border-color:#8b4513;color:#e8c070}
+/* 提示 */
+#hint{position:absolute;top:80px;left:50%;transform:translateX(-50%);font-size:.85rem;color:rgba(200,150,100,.5);pointer-events:none;z-index:5;letter-spacing:.15em;transition:opacity .5s}
+/* 标题画面 */
+#title_screen{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;background:radial-gradient(ellipse at 50% 60%,#1a0804,#020000 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+#title_screen .tit{font-size:clamp(3rem,8vw,5.5rem);font-weight:900;color:#8b0000;letter-spacing:.5em;text-shadow:0 0 60px rgba(139,0,0,.6),0 0 120px rgba(80,0,0,.4);animation:tpulse 3s ease-in-out infinite}
+#title_screen .sub{font-size:.9rem;color:#555;letter-spacing:.8em;margin-bottom:40px}
+@keyframes tpulse{0%,100%{text-shadow:0 0 60px rgba(139,0,0,.6),0 0 120px rgba(80,0,0,.4)}50%{text-shadow:0 0 100px rgba(200,30,30,.9),0 0 200px rgba(120,0,0,.6)}}
+.t_btn{font-family:inherit;font-size:1.05rem;padding:14px 48px;background:rgba(139,0,0,.06);border:1px solid #622;color:#aaa;cursor:pointer;letter-spacing:.25em;transition:all .4s;min-width:260px;text-align:center}
+.t_btn:hover{border-color:#c22;color:#fff;background:rgba(180,0,0,.15);box-shadow:0 0 30px rgba(200,0,0,.3)}
+.t_btn.sm{font-size:.8rem;padding:10px 24px;min-width:auto;border-color:#222;color:#555}
+.t_btn.sm:hover{border-color:#a33;color:#888;background:transparent;box-shadow:none}
+/* 结局画面 */
+#end_screen{position:absolute;top:0;left:0;width:100%;height:100%;z-index:200;background:radial-gradient(ellipse at 50% 40%,#1a0000,#000 80%);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px}
+#end_screen .en_tit{font-size:3rem;font-weight:900;color:#8b0000;letter-spacing:.3em;text-shadow:0 0 50px rgba(200,0,0,.5)}
+#end_screen .en_desc{font-size:1rem;color:#888;max-width:500px;text-align:center;line-height:2.2}
+#end_screen .en_tag{font-size:.8rem;color:#622;letter-spacing:.3em;margin-top:20px}
+/* 收集页面 */
+#collect{position:absolute;top:0;left:0;width:100%;height:100%;z-index:150;background:rgba(0,0,0,.95);display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px;gap:16px}
+#collect h2{font-size:1.8rem;color:#8b0000;letter-spacing:.3em}
+#collect .item{font-size:1rem;color:#555;transition:color .3s}
+#collect .item.done{color:#e8c070}
+/* 场景特效 */
+.flash{animation:fl .3s ease-out}
+@keyframes fl{from{opacity:1;background:rgba(180,0,0,.15)}to{opacity:1;background:transparent}}
+.shake{animation:sh .5s ease-out}
+@keyframes sh{0%,100%{transform:translateX(0)}10%{transform:translateX(-6px)}30%{transform:translateX(6px)}50%{transform:translateX(-3px)}70%{transform:translateX(3px)}90%{transform:translateX(-1px)}}
+/* 过场黑屏 */
+#fade{position:absolute;top:0;left:0;width:100%;height:100%;z-index:99;background:#000;pointer-events:none;opacity:0;transition:opacity .8s}
+#fade.on{opacity:1}
+@media(max-width:800px){#dialog{padding:20px 30px 20px}#dialog .txt{font-size:1rem}#loc_tit{font-size:1.4rem}#title_screen .tit{font-size:2.5rem}}
+</style></head><body>
+<div id="app">
+  <div id="scene" class="bg_entrance"></div>
+  <div id="fog"></div>
+  <div id="particles"></div>
+  <div id="loc_tit"></div>
+  <div id="hint"></div>
+  <div id="inv"></div>
+  <div id="dialog"><div class="spk"></div><div class="txt"></div></div>
+  <div id="choices"></div>
+  <div id="fade"></div>
+  <div id="title_screen">
+    <div class="tit">冥 婚 之 约</div>
+    <div class="sub">G H O S T · B R I D E</div>
+    <button class="t_btn" onclick="startGame()">开 始 探 索</button>
+    <button class="t_btn sm" id="btn_continue" onclick="continueGame()" style="display:none">继 续 探 索</button>
+    <button class="t_btn sm" onclick="showCollection()">收 集 品</button>
+    <button class="t_btn sm" onclick="showEndings()">已 解 锁 结 局</button>
+  </div>
+  <div id="end_screen">
+    <div class="en_tit" id="en_title"></div>
+    <div class="en_desc" id="en_desc"></div>
+    <div class="en_tag" id="en_tag"></div>
+    <button class="t_btn" onclick="restartGame()">重 新 开 始</button>
+  </div>
+  <div id="collect">
+    <h2>收 集 品</h2>
+    <div id="collect_items"></div>
+    <button class="t_btn sm" onclick="document.getElementById('collect').style.display='none'">关 闭</button>
+  </div>
+</div>
+
+<script>
+// ======================== 游戏引擎 ========================
+const $=id=>document.getElementById(id);
+const scene=$('scene'),dialog=$('dialog'),choices=$('choices');
+const spk=$('dialog .spk'),txt=$('dialog .txt'),loc=$('loc_tit'),hint=$('hint'),inv=$('inv');
+const fade=$('fade'),particles=$('particles');
+let GS={room:'entrance',phase:0,inv:[],flags:{},played:false};
+let dialogue_queue=[],current_speaker='';
+
+// 粒子
+for(let i=0;i<50;i++){let p=document.createElement('div');p.className='pt';p.style.left=Math.random()*100+'%';p.style.top=(60+Math.random()*40)+'%';p.style.animationDuration=(Math.random()*8+6)+'s';p.style.animationDelay=(Math.random()*10)+'s';particles.appendChild(p)}
+
+// 存档
+function save(){try{localStorage.setItem('ghostbride',JSON.stringify(GS))}catch(e){}}
+function load(){try{let d=JSON.parse(localStorage.getItem('ghostbride'));if(d)GS=d;return d}catch(e){return null}}
+
+// 场景
+function setScene(bg,title,hintText){
+  scene.className=bg;loc.textContent=title||'';hint.textContent=hintText||'';
+  setTimeout(()=>scene.classList.add('flash'),50);setTimeout(()=>scene.classList.remove('flash'),400)
+}
+
+// 对话
+function narrate(text,spkName){
+  current_speaker=spkName||'';
+  spk.textContent=spkName||'';txt.innerHTML=text;dialog.style.opacity='1'
+}
+
+// 选项
+function ask(options,callback){
+  choices.innerHTML='';
+  options.forEach((o,i)=>{
+    let b=document.createElement('button');b.className='ch_btn';b.textContent=o.label;
+    b.onclick=()=>{choices.innerHTML='';callback(i,o.label)}
+    choices.appendChild(b)
+  })
+}
+
+// 物品
+function addItem(name,desc){
+  if(GS.inv.find(i=>i.n===name))return;
+  GS.inv.push({n:name,d:desc});save();refreshInv()
+}
+function hasItem(name){return GS.inv.some(i=>i.n===name)}
+function refreshInv(){
+  inv.innerHTML=GS.inv.map(i=>`<button class="inv_btn" title="${i.d}">${i.n}</button>`).join('')
+}
+
+// 特效
+function fx(type){scene.classList.add(type);setTimeout(()=>scene.classList.remove(type),type==='flash'?400:600)}
+
+// 淡入淡出
+function fadeIn(cb){fade.classList.add('on');setTimeout(()=>{if(cb)cb();setTimeout(()=>fade.classList.remove('on'),100)},800)}
+function fadeOut(cb){fade.classList.remove('on');setTimeout(()=>{if(cb)cb()},800)}
+
+// 对话序列
+function dl(line,cb){narrate(line);setTimeout(cb,line.length*40+500)}
+function dl_speak(spkName,text,cb){narrate(text,spkName);setTimeout(cb,text.length*40+500)}
+
+// 结局
+function ending(title,desc,tag){
+  $('end_screen').style.display='flex';
+  $('en_title').textContent=title;$('en_desc').textContent=desc;$('en_tag').textContent=tag||'';
+  GS.flags.ended=true;save();
+  try{let e=JSON.parse(localStorage.getItem('gb_endings')||'[]');if(!e.includes(title)){e.push(title);localStorage.setItem('gb_endings',JSON.stringify(e))}}catch(e){}
+  // 同步收集品
+  try{let c=JSON.parse(localStorage.getItem('gb_items')||'[]');GS.inv.forEach(i=>{if(!c.includes(i.n))c.push(i.n)});localStorage.setItem('gb_items',JSON.stringify(c))}catch(e){}
+}
+
+function restartGame(){
+  GS={room:'entrance',phase:0,inv:[],flags:{},played:true};
+  $('end_screen').style.display='none';$('title_screen').style.display='flex';
+  save()
+}
+
+// ======================== 场景数据 ========================
+const ROOMS={
+  entrance:{bg:'bg_entrance',name:'青石村 · 村口',hint:'前方是村子——雾气弥漫，看不清路',
+    items:['村碑','老槐树','告示牌'],
+    exits:{祠堂:'hall',老宅:'mansion',后山小道:'mountain'}},
+  hall:{bg:'bg_hall',name:'林氏祠堂',hint:'牌位林立。香烟缭绕。',
+    items:['祖先牌位','供桌','香炉','祠堂侧门'],
+    exits:{村口:'entrance'}},
+  mansion:{bg:'bg_mansion',name:'林家老宅',hint:'大门虚掩。院子里的红灯笼还亮着。',
+    items:['大门口','院子','堂屋','东厢房','婚房'],
+    exits:{村口:'entrance',祠堂:'hall'}},
+  mountain:{bg:'bg_mountain',name:'后山',hint:'山路越来越窄。树影间有什么在晃动。',
+    items:['山路','古墓','山洞口'],
+    exits:{村口:'entrance'}},
+  cave:{bg:'bg_cave',name:'山 洞',hint:'黑暗吞没一切。只有深处传来滴水声——还有别的什么。',
+    items:['洞壁刻字','石棺','祭坛'],
+    exits:{后山:'mountain'}},
+  chamber:{bg:'bg_chamber',name:'婚 房',hint:'红烛燃尽。床上的嫁衣还在——温的。',
+    items:['喜床','梳妆台','红盖头','嫁衣'],
+    exits:{老宅:'mansion'}}
+};
+
+// ======================== 场景交互 ========================
+function interact(itemId){
+  let room=ROOMS[GS.room];
+  
+  const actions={
+    // === 村口 ===
+    'entrance:村碑':()=>{
+      dl('一块老旧的石碑，上面刻着三个大字——青石村。下面还有一行小字：「建于明万历年间。林氏宗族聚居地。」',()=>{
+        dl('石碑底座上有些东西——新鲜的红色手印。小的。女人的。',()=>{
+          GS.flags.monument=true;save()
+        })
+      })
+    },
+    'entrance:老槐树':()=>{
+      if(!GS.flags.tree){
+        GS.flags.tree=true;save();
+        dl('这棵槐树太大了。树冠遮住了半边天。树干上缠满了褪色的红布条。',()=>{
+          dl('你凑近了一些。红布条上——写着名字。林婉儿。林素贞。林二娘…全都是女人的名字。每一个名字旁边都系着一枚铜钱。',()=>{
+            addItem('褪色红布条','从老槐树上取下的红布条，上面写着林婉儿的名字')
+          })
+        })
+      }else{
+        dl('槐树依然立在那里。风吹过——红布条像无数只手在摆动。沙沙作响。')
+      }
+    },
+    'entrance:告示牌':()=>{
+      if(GS.flags.notice)return dl('告示上的字已经被雨水模糊。但你能认出「冥婚」两个字。');
+      GS.flags.notice=true;save();
+      dl('一张发黄的告示钉在木板上。边缘被撕掉了一角。',()=>{
+        dl('「本村林氏第三十三代嫡女林婉儿，于民国三十六年三月三日，嫁与冥府。凡经过此地者，勿扰。违者——后果自负。」',()=>{
+          addItem('林氏告示','一张老旧的告示，记载了民国年间的冥婚')
+        })
+      })
+    },
+    
+    // === 祠堂 ===
+    'hall:祖先牌位':()=>{
+      if(!GS.flags.tablets){
+        GS.flags.tablets=true;save();
+        dl('成排的牌位。从上到下——从明朝到现在。你注意到最后一排有块空位。旁边写着「待嫁——林婉儿」。',()=>{
+          dl('不对。冥婚的新娘牌位不应该进祠堂。除非——她是以正妻的身份被迎娶的。',()=>{
+            addItem('祠堂手记','记录牌位排布的笔记——林婉儿的牌位以正妻身份待嫁')
+          })
+        })
+      }else dl('牌位还在。空位还在。')
+    },
+    'hall:供桌':()=>{
+      dl('供桌上摆着三牲。新鲜的——血还没凝固。香烛燃了一半。桌角有张红纸——婚书。',()=>{
+        if(!GS.flags.marriage){
+          GS.flags.marriage=true;save();
+          dl('婚书上写着：「男方：冥府无名氏。女方：青石村林氏第三十三代嫡女林婉儿。庚帖已合。八字已对。择三月三日寅时过门。」',()=>{
+            dl('你翻到背面——写着「聘礼：十三口棺木。十三枚铜钱。十三根红绳。」',()=>{
+              addItem('冥婚婚书','从祠堂供桌上发现的婚书——男方的名字被涂黑了')
+            })
+          })
+        }
+      })
+    },
+    'hall:香炉':()=>{
+      if(!hasItem('铜钱')){
+        dl('香炉很大。铜制的。里面插满了香。你伸手进去——摸到了什么东西。',()=>{
+          dl('一枚铜钱。方孔。已经发绿了。但铜钱上有暗红色的渍迹。不是锈。',()=>{
+            addItem('铜钱','香炉里找到的铜钱——上面沾着暗红色的渍迹')
+          })
+        })
+      }else dl('香炉里的香还在燃着。但闻不到檀香味。只有——腥味。')
+    },
+    'hall:祠堂侧门':()=>{
+      if(hasItem('铜钱')){
+        dl('侧门上贴着一张符纸。你把铜钱按在符纸上——门开了。',()=>{
+          ask([{label:'走进去'},{label:'回头'}],(i)=>{
+            if(i===0){GS.room='mansion';save();enterRoom()}
+            else dl('你退后了。侧门在身后缓缓关上——发出叹息般的声音。')
+          })
+        })
+      }else{
+        dl('一扇侧门。上面贴着一张符纸。用手一碰——符纸上的墨迹还是湿的。你需要什么东西来开门。')
+      }
+    },
+    
+    // === 老宅 ===
+    'mansion:大门口':()=>{
+      if(!GS.flags.door){GS.flags.door=true;save();
+        dl('大门虚掩着。门缝里透出红色的光——灯笼的光。你推开大门——院子里空荡荡的。正中央摆着一顶花轿。轿帘在动——但外面没有风。')}
+      else dl('花轿还在院子里。轿帘还在动。这次你看到——轿帘下露出了一只绣花鞋。')
+    },
+    'mansion:院子':()=>{
+      if(!GS.flags.courtyard){GS.flags.courtyard=true;save();
+        dl('院子里摆着一桌酒席——满满一桌。菜是热的。酒是温的。但二十四个座位——全是空的。你注意到每个座位前都扣着一个碗——碗底朝上。风俗里，这是给死人坐的席。',()=>{addItem('宴席笔记','记录老宅院中鬼宴的笔记')})}
+      else dl('酒席还在。菜——还是热的。酒——还是温的。不是你离开的时间。')
+    },
+    'mansion:堂屋':()=>{
+      dl('堂屋正中挂着林家祖先的画像。画像下面——一个老太太坐在太师椅上。背对着你。',()=>{
+        if(!GS.flags.oldlady){GS.flags.oldlady=true;save();
+          dl('「你来了。」她没回头。声音像枯叶摩擦。「婉儿等了好久了。」',()=>{
+            ask([{label:'走上前去'},{label:'站在原地问话'}],(i)=>{
+              if(i===0){dl('你绕到前面——椅子上没有人。只有一张照片。老太太的照片——但照片里的人——眼睛在看你。');fx('shake')}
+              else dl('「你是谁？」你问。老太太笑了：「我是林家最后一个知道真相的人。但我也快走了。去婚房吧——婉儿会告诉你一切的。」',()=>{GS.flags.told=true;save()})
+            })
+          })}else{
+          if(GS.flags.told)dl('椅子空了。连照片都不在了。')
+          else dl('「还是那句话——婉儿在等你。」')
+        }
+      })
+    },
+    'mansion:东厢房':()=>{
+      if(!hasItem('林家日记')){
+        dl('东厢房——很整洁。桌上摆着一本打开的日记。墨迹虽然淡了——但能辨认。',()=>{
+          dl('「三月一日。爹说给我找了一门好亲事。我问是谁——他不说。」',()=>{
+            dl('「三月二日。娘在哭。我问她——她只摇头。我开始觉得不对了。」',()=>{
+              dl('「三月三日——红色的轿子停在了门口。里面没有人。但有新郎的袍服。平铺在座椅上——像躺着一个人。」最后一页被撕掉了。',()=>{
+                addItem('林家日记','林婉儿生前的日记——最后一页被撕掉了')
+              })
+            })
+          })
+        })
+      }else dl('日记还在桌上。但翻不开了——书页粘在一起。像被什么湿透又干了。')
+    },
+    'mansion:婚房':()=>{
+      if(hasItem('林家日记')&&hasItem('红盖头')){
+        GS.room='chamber';save();enterRoom();return;
+      }
+      dl('婚房的门口挂着一块红盖头。门缝里透出暗红色的光——有人影在里面晃动。你需要准备周全再进去。',()=>{
+        if(!hasItem('林家日记'))dl('（提示：先在东厢房找到林家日记）');
+        if(!hasItem('红盖头'))dl('（提示：需要一个红盖头——在山洞的祭坛上）')
+      })
+    },
+    
+    // === 后山 ===
+    'mountain:山路':()=>{
+      dl('山路越来越窄。石阶上长满了青苔。你注意到石阶上有脚印——湿的。赤足的。小脚印。往山上去了。',()=>{
+        GS.flags.footprints=true;save()
+      })
+    },
+    'mountain:古墓':()=>{
+      if(!hasItem('红绳')){
+        dl('一座古墓。碑已经被藤蔓覆盖。你清理了一下——「林氏冥婚合葬之墓」。下面是两排名字。每一个都没有终年日期——只有嫁入冥府的年份。',()=>{
+          dl('墓碑前的石缝里露出一截红色的东西。你拽出来——是一根红绳。打了死结。',()=>{addItem('红绳','古墓前找到的红绳——打了死结')})
+        })
+      }else dl('墓碑还在。红绳原来扎着的地方——渗出了暗红色的液体。')
+    },
+    'mountain:山洞口':()=>{
+      if(hasItem('红绳')){
+        GS.room='cave';save();enterRoom();return;
+      }
+      dl('一个黑漆漆的洞口。洞口的地面上散落着红色的纸屑——鞭炮屑。里面隐约传来唢呐声。你需要一根红绳来进入。',()=>{
+        if(!hasItem('红绳'))dl('（提示：在古墓前找一根红绳）')
+      })
+    },
+    
+    // === 山洞 ===
+    'cave:洞壁刻字':()=>{
+      if(!GS.flags.walltext){GS.flags.walltext=true;save();
+        dl('洞壁上刻满了字。密密麻麻。不是刻的——是指甲抠的。',()=>{
+          dl('「救我」「我不想嫁」「他每晚都来」「他穿着新郎的衣服但脸是空的」「婉儿对不起」「轮到你了」——不同的笔迹。不同的时间。同一个绝望。')
+        })}
+      else dl('刻字还在。有一行字刚才没看到——在最下面：「你是下一个。」字迹是新的。')
+    },
+    'cave:石棺':()=>{
+      dl('洞中央摆着一口石棺。棺盖被推开了。里面——铺着红色的锦被。两个枕头——其中一个有凹痕。被子还是温的。',()=>{fx('shake')})
+    },
+    'cave:祭坛':()=>{
+      if(!hasItem('红盖头')){
+        dl('祭坛上供奉着一块红布。你仔细一看——是嫁衣上的红盖头。上面用金线绣着一个「囍」字。',()=>{
+          dl('拿起红盖头的瞬间——你听到了唢呐声。很近。就在身后。但转过去——什么都没有。',()=>{
+            addItem('红盖头','从山洞祭坛上取下的红盖头——金线绣着囍字');fx('flash')
+          })
+        })
+      }else dl('祭坛空了。但唢呐声——还在响。')
+    },
+    
+    // === 婚房 ===
+    'chamber:喜床':()=>{
+      dl('喜床很大。红帐垂下。透过薄纱——你看到床上坐着一个人影。红色的嫁衣。一动不动。',()=>{
+        ask([{label:'掀开红帐'},{label:'后退'}],(i)=>{
+          if(i===0){
+            dl('你掀开红帐——是一个纸人。纸扎的新娘。脸上的胭脂猩红。嘴是用针缝着的。',()=>{fx('shake');GS.flags.sawdoll=true;save()})
+          }else dl('你退后了。红帐没有动——但你看到床单上有一滴暗红色的液体。新的。')
+        })
+      })
+    },
+    'chamber:梳妆台':()=>{
+      if(!GS.flags.mirror){GS.flags.mirror=true;save();
+        dl('梳妆台很旧了。铜镜蒙着一层灰。你擦了一下——镜子里的倒影——不是你。是一个穿嫁衣的女人。在你身后。',()=>{fx('flash')})}
+      else dl('铜镜碎了。但不是你打的——你上次离开之前——它是完整的。')
+    },
+    'chamber:红盖头':()=>{
+      if(GS.flags.sawdoll&&hasItem('林家日记')&&hasItem('红绳')&&hasItem('铜钱')){
+        GS.phase=5;save();
+        dl('你把红盖头放在梳妆台上。红绳绕在手腕上。铜钱握在手心。日记翻到最后一页——',()=>{
+          dl('门关上了。烛火全部熄灭。黑暗里——一只手搭上你的肩膀。冰的。小小的。女人的手。',()=>{
+            ask([{label:'转身面对她'},{label:'闭上眼睛'},{label:'冲出房间'}],_finalChoice)
+          })
+        })
+      }else{
+        dl('红盖头。金线。你还需要更多东西——日记。红绳。铜钱。这些能帮你面对她。',()=>{
+          let missing=[];
+          if(!hasItem('林家日记'))missing.push('林家日记（老宅东厢房）');
+          if(!hasItem('红绳'))missing.push('红绳（后山古墓前）');
+          if(!hasItem('铜钱'))missing.push('铜钱（祠堂香炉）');
+          if(!GS.flags.sawdoll)missing.push('见过纸人新娘（婚房喜床）');
+          missing.forEach(m=>dl('• 还需要：'+m))
+        })
+      }
+    },
+    'chamber:嫁衣':()=>{
+      dl('嫁衣挂在衣架上。很美。金线。刺绣。但胸口那个位置——有一个洞。被什么东西从里面捅穿的。',()=>{
+        addItem('嫁衣碎片','从嫁衣上取下的一小块布料——胸口的破洞边缘焦黑')
+      })
+    }
+  };
+  
+  let key=GS.room+':'+itemId;
+  if(actions[key]){actions[key]();return}
+  dl('没什么特别的。')
+}
+
+function _finalChoice(i){
+  if(i===0){
+    dl('你转身了。她站在你面前——林婉儿。穿着嫁衣。脸被红盖头遮住。',()=>{
+      dl('「谢谢你——愿意转身。」她的手很小。很冷。「他们把我嫁给了一个不存在的东西。用我的名字。用我的命。换村子的庇护。」',()=>{
+        dl('「解开红绳。」她说。「解开——我就能走了。」',()=>{
+          ask([{label:'解开红绳'},{label:'把红绳绑紧'}],(j)=>{
+            if(j===0)ending('解 脱','你解开了红绳。她笑了——这是八十年来第一次有人帮她。红盖头飘落。天亮了。第二天你在山下的旅馆醒来——手心里还残留着凉意。','结局一：解脱');
+            else ending('守 约','你绑紧了红绳。她沉默了很久。然后红盖头下流出血来。整个房间开始震动。你逃出老宅——身后的村子燃烧着。你活了。但每天晚上都梦到——有人在解红绳。','结局二：守约')
+          })
+        })
+      })
+    })
+  }else if(i===1){
+    dl('你闭上眼睛。耳边响起轻轻的歌声——林婉儿在唱歌。那个调子——不是活人能唱出来的。',()=>{
+      dl('歌停了。「你怕我。」她说。不是责备。只是陈述。',()=>{
+        ask([{label:'睁开眼睛看着她'},{label:'转身离开'}],(j)=>{
+          if(j===0)ending('面 对','你睁开眼睛。她掀开了盖头。脸还在——不像鬼，像一个等太久了的姑娘。「外面的人终于来了。我等了八十年。」她把手放在你心口——第二天你醒来，发现自己躺在村口。口袋里多了一张褪色的婚书——背面写着「已解」。','结局三：面对');
+          else ending('逃 离','你转身冲出婚房。身后传来哭声——不是恐怖的，是伤心的。你跑出村子——再也没有回头看。后来你在城里当了记者。五十年后——依然会在梦里听到歌声。','结局四：逃离')
+        })
+      })
+    })
+  }else{
+    if(hasItem('嫁衣碎片')){
+      dl('你猛地冲向房门——用嫁衣碎片堵住门缝。门外的力量推不开了。你听到外面传来一声叹息。',()=>{
+        dl('「你走吧。」她的声音渐渐远了。天亮的时候门自己开了——老宅空了。花轿不见了。你的采访稿在编辑部成了年度头条。但没有人信你。','结局五：真相')
+      })
+    }else{
+      ending('永 困','你冲向门——门纹丝不动。烛火全亮了。满屋子都是红色。你转身——床上坐着十三个人。穿着嫁衣。一模一样的脸。都是林婉儿。她们同时开口：「留下来。」','结局六：永困')
+    }
+  }
+}
+
+// ======================== 场景切换 ========================
+function enterRoom(){
+  let room=ROOMS[GS.room];
+  setScene(room.bg,room.name,room.hint);
+  choices.innerHTML='';
+  dialog.style.opacity='0';
+  
+  // 渲染场景物品
+  let items_div=document.getElementById('scene_items')||document.createElement('div');
+  items_div.id='scene_items';
+  items_div.style.cssText='position:absolute;bottom:120px;left:60px;display:flex;flex-wrap:wrap;gap:8px;z-index:8;max-width:500px';
+  if(!items_div.parentNode)$('app').appendChild(items_div);
+  items_div.innerHTML='';
+  
+  room.items.forEach(it=>{
+    let btn=document.createElement('button');
+    btn.className='ch_btn';btn.style.cssText='font-size:.85rem;padding:10px 20px;min-width:auto';
+    btn.textContent=it;btn.onclick=()=>interact(it);
+    items_div.appendChild(btn)
+  });
+  
+  // 出口按钮
+  if(room.exits){
+    let sep=document.createElement('span');
+    sep.style.cssText='color:#3a2818;margin:0 8px;line-height:2.5';sep.textContent='|';
+    items_div.appendChild(sep);
+    Object.entries(room.exits).forEach(([name,target])=>{
+      let btn=document.createElement('button');
+      btn.className='ch_btn';btn.style.cssText='font-size:.85rem;padding:10px 20px;min-width:auto;border-color:#4a2a10';
+      btn.textContent='→ '+name;
+      btn.onclick=()=>{GS.room=target;save();enterRoom()};
+      items_div.appendChild(btn)
+    })
+  }
+}
+
+// ======================== 序章 ========================
+function startIntro(){
+  fadeIn(()=>{
+    setScene('bg_entrance','','');
+    dl('民国三十七年。秋天。',()=>{
+      dl('你是一名报社记者。三天前收到一封匿名信——信里只有一张照片和一个地名。照片上是一座深山里的村子。地名是——青石村。',()=>{
+        dl('你查了三天。关于青石村——几乎没有任何记录。只有一份民国三十五年的新闻：青石村发生大火。村民全部失踪。',()=>{
+          dl('今天——你站在通往村子的山路上。晨雾很重。雾气里——你闻到了一股说不清的味道。像什么东西烧焦了——又像香烛。',()=>{
+            fadeOut(()=>{
+              GS.room='entrance';enterRoom();GS.phase=1;save()
+            })
+          },500)
+        },300)
+      },300)
+    },300)
+  })
+}
+
+// ======================== 标题 ========================
+function startGame(){
+  GS={room:'entrance',phase:0,inv:[],flags:{},played:true};save();
+  $('title_screen').style.display='none';startIntro()
+}
+function continueGame(){
+  if(load()){$('title_screen').style.display='none';GS.room=GS.room||'entrance';enterRoom()}
+}
+
+function showCollection(){
+  let items_div=$('collect_items');
+  let ci=JSON.parse(localStorage.getItem('gb_items')||'[]');
+  let all=['褪色红布条','林氏告示','祠堂手记','冥婚婚书','铜钱','宴席笔记','林家日记','红绳','红盖头','嫁衣碎片'];
+  items_div.innerHTML=all.map(i=>`<div class="item ${ci.includes(i)?'done':''}">${ci.includes(i)?'✓':'○'} ${i}</div>`).join('');
+  $('collect').style.display='flex'
+}
+function showEndings(){
+  $('collect_items').innerHTML='';
+  let ends=JSON.parse(localStorage.getItem('gb_endings')||'[]');
+  let all=['解脱','守约','面对','逃离','真相','永困'];
+  let titles={'解脱':'结局一：挣脱冥婚，放林婉儿自由','守约':'结局二：维持婚约，村子燃烧','面对':'结局三：正视她，收到已解的婚书','逃离':'结局四：逃出村子，一生遗憾','真相':'结局五：用嫁衣碎片争取时间，成为头条','永困':'结局六：被困婚房，成为第十四个'};
+  $('collect_items').innerHTML=all.map(i=>`<div class="item ${ends.includes(i)?'done':''}">${ends.includes(i)?'✓':'○'} ${titles[i]}</div>`).join('');
+  $('collect').style.display='flex'
+}
+
+// 初始化
+load();
+if(GS.played){$('btn_continue').style.display='inline-block'}
+refreshInv();
+</script></body></html>
